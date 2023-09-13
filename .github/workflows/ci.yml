@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  AR_REPO: ${{ secrets.CODECOV_API_IMAGE_V2 || || 'codecov/self-hosted-api' }}
+  AR_REPO: ${{ secrets.CODECOV_API_IMAGE_V2 }}
 
 jobs:
   lint:
