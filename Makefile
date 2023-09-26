@@ -10,6 +10,7 @@ REQUIREMENTS_TAG := requirements-v1-$(shell sha1sum requirements.txt | cut -d ' 
 VERSION := release-${sha}
 CODECOV_UPLOAD_TOKEN ?= "notset"
 CODECOV_STATIC_TOKEN ?= "notset"
+CODECOV_ATS_TESTS ?= "notset"
 TIMESERIES_ENABLED ?= "true"
 export DOCKER_BUILDKIT=1
 export API_DOCKER_REPO=${AR_REPO}
@@ -202,7 +203,7 @@ test_env.container_label_analysis:
 	codecovcli label-analysis --base-sha=$(shell git merge-base HEAD^ origin/main) --token=${CODECOV_STATIC_TOKEN}
 
 test_env.container_ats:
-	codecovcli --codecov-yml-path=codecov_cli.yml do-upload --plugin pycoverage --plugin compress-pycoverage --flag smart-labels --fail-on-error
+	python -m pytest --cov=./ ${CODECOV_ATS_TESTS}
 
 test_env:
 	make test_env.up

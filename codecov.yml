@@ -14,3 +14,8 @@ flag_management:
 
 codecov:
   require_ci_to_pass: false
+
+cli:
+  plugins:
+    pycoverage:
+      report_type: "json"

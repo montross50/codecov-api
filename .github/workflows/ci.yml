@@ -152,15 +152,21 @@ jobs:
         run: |
           make test_env.prepare
           make test_env.check_db
-      - name: Run Static Analysis
-        run: |
-          make test_env.static_analysis CODECOV_STATIC_TOKEN=${{ secrets.STATIC_TOKEN }}
-      - name: Run Label Analysis
-        run: |
-          make test_env.label_analysis CODECOV_STATIC_TOKEN=${{ secrets.STATIC_TOKEN }} TIMESERIES_ENABLED=false
       - name: Run ATS
+        uses: codecov/codecov-ats@v0
+        env:
+          CODECOV_STATIC_TOKEN: ${{ secrets.STATIC_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
+      - name: Run tests and collect coverage
         run: |
-          make test_env.ats CODECOV_UPLOAD_TOKEN=${{ secrets.CODECOV_ORG_TOKEN }}
+          make test_env.ats CODECOV_ATS_TESTS=${{ env.CODECOV_ATS_TESTS }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4-beta
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
+        with:
+          flags: smart-tests
+          plugins: pycoverage,compress-pycoverage
 
   test:
     name: Test
